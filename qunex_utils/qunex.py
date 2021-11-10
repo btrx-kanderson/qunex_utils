@@ -1,5 +1,6 @@
 import os
 
+
 class qunex(object):
     '''
     Class with functions for wrapping around an individual QUNEX subject directory
@@ -37,3 +38,6 @@ class qunex(object):
             setattr(self, 'session_txt', os.path.join(self.dir, 'session.txt'))
             self._read_session()
             
+
+    def _print(self):
+        print(self.dir)
