@@ -1,25 +1,52 @@
 
-
+import os
 import matplotlib.pyplot as plt
 from nilearn import plotting
 import nibabel as nib
 from mriqc.viz.utils import plot_mosaic, plot_segmentation, plot_spikes
+import sys
+sys.path.append('/home/ubuntu/Projects/qunex_utils/qunex_utils')
+from qunex import qunex 
 
+
+def acpc_alignment(qunex_run, out_dir):
+
+    #out_dir = '/home/ubuntu/embarc_qunex'
+
+    nii_robustroi = os.path.join(qunex_run.dir_hcp, qunex_run.session_info['id'], 'T1w', 'ACPCAlignment', 'robustroi.nii.gz')
+
+    os.path.join(qunex_run.dir_hcp, qunex_run.session_info['id'], 'T1w', 'ACPCAlignment',)
+
+    ### RobustROI
+    out_robustroi = os.path.join(out_dir, 'viz', 'brains', 'robustroi.svg')
+    plot_mosaic(img=nii_robustroi,
+                out_file=out_robustroi,
+                zmax=20)
+
+
+
+def viz_brains(qunex_dirs, out_dir):
+    '''
+    Key visualizations to assess QA of QUNEX processing stream
+    '''
+
+    qunex_dir = '/fmri-qunex/research/imaging/datasets/embarc/processed_data/pf-pipelines/qunex-nbridge/studies/embarc-20201122-LHzJPHi4/sessions/CU0025_wk1'
+    qunex_run = qunex(qunex_dir)
 
 
 in_file = '/fmri-qunex/research/imaging/datasets/embarc/processed_data/pf-pipelines/qunex-nbridge/studies/embarc-20201122-LHzJPHi4/sessions/CU0079_baseline/hcp/CU0079_baseline/MNINonLinear/T1w_restore.nii.gz'
 in_contours = '/fmri-qunex/research/imaging/datasets/embarc/processed_data/pf-pipelines/qunex-nbridge/studies/embarc-20201122-LHzJPHi4/sessions/CU0079_baseline/hcp/CU0079_baseline/MNINonLinear/Results/1/1_finalmask.nii.gz'
+out_file = '/home/ubuntu/embarc_qc/out.svg'
+
 plot_segmentation(
     in_file,
     in_contours,
-    out_file=str(out_file),
-    cut_coords=self.inputs.cut_coords,
-    display_mode=self.inputs.display_mode,
-    levels=self.inputs.levels,
-    colors=self.inputs.colors,
-    saturate=self.inputs.saturate,
-    vmin=vmin,
-    vmax=vmax,
+    out_file=out_file,
+    cut_coords=10,
+    display_mode='z',
+    levels=[0.5],
+    colors='red',
+    saturate=False
 )
 
 
