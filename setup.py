@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    package_dir={"": "qunex_utils"},
+    packages=setuptools.find_packages(where="qunex_utils"),
     python_requires=">=3.6",
 )
