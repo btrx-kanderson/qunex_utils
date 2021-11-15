@@ -5,23 +5,25 @@ import functools
 import numpy as np
 import pandas as pd
 import sys
+from progressbar import ProgressBar
 sys.path.append('/home/ubuntu/Projects/qunex_utils/qunex_utils')
 from qunex import qunex 
 from utils_read import read_freesurfer, read_mask_stats, read_bold_motion
 
+
+def _make_output_dirs(out_dir):
+    out_folders  = ['data', 'viz', 'qc', 'viz/pheno_histograms']
+    for o_folder in out_folders:
+        out_path = os.path.join(out_dir, o_folder)
+        if not os.path.exists(out_path):
+            os.mkdir(out_path)
+            
 
 def wrangle(qunex_dirs, out_dir):
     '''
     Perform operations on list of qunex directories
     '''
 
-    def _make_output_dirs(out_dir):
-        out_folders  = ['data', 'viz', 'qc', 'viz/pheno_histograms']
-        for o_folder in out_folders:
-            out_path = os.path.join(out_dir, o_folder)
-            if not os.path.exists(out_path):
-                os.mkdir(out_path)
-                
     def _catch_output(qunex_output):
         motion_list = []
         mask_list = []
@@ -37,9 +39,9 @@ def wrangle(qunex_dirs, out_dir):
         return return_motion_df, return_mask_df, return_fs_df
 
     # extract data from each QUNEX directory
-    out_dir    = '/home/ubuntu/embarc_qunex'
-    qunex_dirs = glob.glob(os.path.join('/fmri-qunex/research/imaging/datasets/embarc/processed_data/pf-pipelines/qunex-nbridge/studies/embarc-20201122-LHzJPHi4/sessions/*'))
-    qunex_dirs = [x for x in qunex_dirs if '_' in x.split('/')[-1]]
+    #out_dir    = '/home/ubuntu/embarc_qunex'
+    #qunex_dirs = glob.glob(os.path.join('/fmri-qunex/research/imaging/datasets/embarc/processed_data/pf-pipelines/qunex-nbridge/studies/embarc-20201122-LHzJPHi4/sessions/*'))
+    #qunex_dirs = [x for x in qunex_dirs if '_' in x.split('/')[-1]]
 
     # create output directories
     _make_output_dirs(out_dir)
@@ -56,6 +58,28 @@ def wrangle(qunex_dirs, out_dir):
         df.to_csv(os.path.join(out_dir, 'data/{}.csv'.format(name)), index=None)
 
     return return_paths[0], return_paths[1], return_paths[2]
+
+
+def compile_freesurfer_estimates(qunex_dirs, out_dir):
+    
+    pbar = ProgressBar()
+
+    # create output directories
+    _make_output_dirs(out_dir)
+
+    # free
+    fs_list = []
+    for qunex_dir in pbar(qunex_dirs):
+        try:
+            qunex_run   = qunex(qunex_dir)
+            freesurf_df = read_freesurfer(qunex_run, stat_files=['aseg.stats', 'lh.aparc.stats', 'rh.aparc.stats'])
+            fs_list.append(freesurf_df)
+        except:
+            'ERROR: {}'.format(qunex_run.session_info['id'])
+
+    output = list(map(functools.partial(read_freesurfer, stat_files=['aseg.stats', 'lh.aparc.stats', 'rh.aparc.stats']), qunex_dirs[0:10]))
+
+    freesurf_df = read_freesurfer(qunex_run, stat_files=['aseg.stats', 'lh.aparc.stats', 'rh.aparc.stats'])
 
 
 
