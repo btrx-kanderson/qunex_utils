@@ -4,6 +4,17 @@ import os
 class qunex(object):
     '''
     Class with functions for wrapping around an individual QUNEX subject directory
+
+    Attributes
+    ----------- 
+        dir:        Full path to the QUNEX subject directory
+        dir_hcp:    Full path to the HCP/QUNEX subject directory
+        dir_bids:   Full path to the BIDS/QUNEX subject directory
+        dir_nii:    Full path to the NII/QUNEX subject directory
+
+        session_info: Dictionary with metadata about the QUNEX run
+        session_txt:  Full path to the QUNEX produced txt file run metadata
+
     '''
     def __init__(self, dir):
         self.dir = dir  
@@ -28,7 +39,7 @@ class qunex(object):
         self.paths = dict()
 
         # define paths to the following qunex subdirectories
-        folders = ['hcp', 'images', 'bids','nii']
+        folders = ['hcp', 'images', 'bids', 'nii']
         for folder in folders:
             if os.path.exists(os.path.join(self.dir, folder)):
                 setattr(self, 'dir_{}'.format(folder), os.path.join(self.dir, folder))

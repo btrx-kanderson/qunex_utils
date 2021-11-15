@@ -79,9 +79,11 @@ def read_freesurfer(qunex_run, stat_files=['aseg.stats', 'lh.aparc.stats', 'rh.a
             fs_df = _read_volume(fs_data, qunex_run)
         
         fs_list.append(fs_df)
+        
     # return combined freesurfer dataframe
-    fs_df = pd.concat(fs_list, 1)
-    return fs_df
+    if len(fs_list) > 0:
+        fs_df = pd.concat(fs_list, 1)
+        return fs_df
 
 
 

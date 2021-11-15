@@ -33,7 +33,19 @@ The output directory structure will contain the following:
         |-- qc
         |-- viz
             |-- pheno_histograms
+            |-- brains
+                |-- Subject001
+                    |-- anat
+                    |-- func
+                    |-- reports
 
 
+
+## Example
+
+```python
+
+
+```
 
 
